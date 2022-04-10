@@ -2,8 +2,8 @@
 Wireguard installation
 ==============
 
-1. Create a server with open ssh ports and a port for wireguard (which we will install in the instructions below).
-The port for wireguard should be of the UDP type
+1. | Create a server with open ssh ports and a port for wireguard (which we will install in the instructions below).
+| The port for wireguard should be of the UDP type
 
 2. Log in and update the server:
   * apt update && apt upgrade -y
@@ -20,8 +20,8 @@ The port for wireguard should be of the UDP type
 6. Check what your network interface is called:
   * ifconfig
 
-7. Most likely your network interface is eth0, but you may have another interface such as ens3 or something else.
-This interface name is used further in the /etc/wireguard/wg0.conf which we will now create:
+7. | Most likely your network interface is eth0, but you may have another interface such as ens3 or something else.
+| This interface name is used further in the /etc/wireguard/wg0.conf which we will now create:
   * vim /etc/wireguard/wg0.conf
   * | [Interface]
     | PrivateKey = <privatekey>
@@ -68,10 +68,10 @@ This interface name is used further in the /etc/wireguard/wg0.conf which we will
      | Endpoint = <SERVER-IP>:51830
      | AllowedIPs = 0.0.0.0/0
      | PersistentKeepalive = 20
-  * Here <CLIENT-PRIVATE-KEY> replace with the client private key,
-    that is the content of /etc/wireguard/gorelov_privatekey on the server.
-    <SERVER-PUBKEY> replace with the public key of the server,
-    i.e. the content of /etc/wireguard/publickey on the server.
-    <SERVER-IP> change to the server IP.
-  * Open this file in the Wireguard client (available for all operating systems, including mobile ones)
-    - and press the connect button in the client.
+  * | Here <CLIENT-PRIVATE-KEY> replace with the client private key,
+    | that is the content of /etc/wireguard/gorelov_privatekey on the server.
+    | <SERVER-PUBKEY> replace with the public key of the server,
+    | i.e. the content of /etc/wireguard/publickey on the server.
+    | <SERVER-IP> change to the server IP.
+  * | Open this file in the Wireguard client (available for all operating systems, including mobile ones)
+    | - and press the connect button in the client.
