@@ -29,55 +29,70 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: rest
-              containerPort: 9200
-              protocol: TCP
-            - name: inter-node
-              containerPort: 9300
-              protocol: TCP
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-          volumeMounts:
-            - name: data
-              mountPath: /usr/share/elasticsearch/data
-          env:
-            - name: cluster.name
-              value: k8s-logs
-            - name: node.name
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: discovery.seed_hosts
-              value: "es-cluster-0.elasticsearch,es-cluster-1.elasticsearch,es-cluster-2.elasticsearch"
-            - name: cluster.initial_master_nodes
-              value: "es-cluster-0,es-cluster-1,es-cluster-2"
-            - name: ES_JAVA_OPTS
-              value: "-Xms512m -Xmx512m"
-            initContainers:
-              - name: fix-permissions
-                image: busybox
-                command: [ "sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data" ]
-                securityContext:
-                  privileged: true
-                volumeMounts:
-                  - name: data
-                    mountPath: /usr/share/elasticsearch/data
-              - name: increase-vm-max-map
-                image: busybox
-                command: [ "sysctl", "-w", "vm.max_map_count=262144" ]
-                securityContext:
-                  privileged: true
-              - name: increase-fd-ulimit
-                image: busybox
-                command: [ "sh", "-c", "ulimit -n 65536" ]
-                securityContext:
-                  privileged: true
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+          - name: rest
+            containerPort: 9200
+            protocol: TCP
+          - name: inter-node
+            containerPort: 9300
+            protocol: TCP
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+        volumeMounts:
+          - name: data
+            mountPath: /usr/share/elasticsearch/data
+        env:
+          - name: cluster.name
+            value: k8s-logs
+          - name: node.name
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: discovery.seed_hosts
+            value: "es-cluster-0.elasticsearch,es-cluster-1.elasticsearch,es-cluster-2.elasticsearch"
+          - name: cluster.initial_master_nodes
+            value: "es-cluster-0,es-cluster-1,es-cluster-2"
+          - name: ES_JAVA_OPTS
+            value: "-Xms512m -Xmx512m"
+          - name: xpack.security.enabled
+            value: "false"
+      initContainers:
+      - name: fix-permissions
+        image: busybox
+        command: [ "sh", "-c", "chown -R 1000:1000 /usr/share/elasticsearch/data" ]
+        securityContext:
+          privileged: true
+        volumeMounts:
+          - name: data
+            mountPath: /usr/share/elasticsearch/data
+      - name: increase-vm-max-map
+        image: busybox
+        command: [ "sysctl", "-w", "vm.max_map_count=262144" ]
+        securityContext:
+          privileged: true
+      - name: increase-fd-ulimit
+        image: busybox
+        command: [ "sh", "-c", "ulimit -n 65536" ]
+        securityContext:
+          privileged: true
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      annotations:
+        volume.beta.kubernetes.io/storage-class: "standard"
+      labels:
+        app: {{ include "elasticsearch.fullname" . }}
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: do-block-storage
+      resources:
+        requests:
+          storage: 8Gi
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -90,14 +105,3 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      volumeClaimTemplates:
-      - metadata:
-          name: data
-          labels:
-            app: {{ include "elasticsearch.fullname" . }}
-        spec:
-          accessModes: [ "ReadWriteOnce" ]
-          storageClassName: do-block-storage
-          resources:
-            requests:
-              storage: 8Gi
