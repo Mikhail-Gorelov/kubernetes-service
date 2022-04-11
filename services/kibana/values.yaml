@@ -63,8 +63,8 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 1000m
-    requests:
-      cpu: 100m
+  requests:
+    cpu: 100m
 
 autoscaling:
   enabled: false
