@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "autoheal.fullname" . }}
+  name: {{ include "gitlab-runner.fullname" . }}
   labels:
-    {{- include "autoheal.labels" . | nindent 4 }}
+    {{- include "gitlab-runner.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "autoheal.selectorLabels" . | nindent 6 }}
+      {{- include "gitlab-runner.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "autoheal.selectorLabels" . | nindent 8 }}
+        {{- include "gitlab-runner.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "autoheal.serviceAccountName" . }}
+      serviceAccountName: {{ include "gitlab-runner.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:

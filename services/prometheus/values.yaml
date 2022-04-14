@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  pullPolicy: IfNotPresent
+  repository: prometheus
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "2.33.5"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -80,3 +80,12 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+operator:
+  enabled: false
+
+prometheus:
+  enabled: true
+
+alertmanager:
+  enabled: false

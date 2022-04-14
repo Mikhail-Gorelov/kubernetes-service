@@ -84,10 +84,3 @@ affinity: {}
 redis:
   auth:
     enabled: false
-
-kuberService:
-  redis:
-    redisUrl: "redis://redis:6379"
-    redisHost: ""
-    redisPort: "6379"
-    redisDB: "5"

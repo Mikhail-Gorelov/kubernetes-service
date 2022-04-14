@@ -1,14 +1,14 @@
-# Default values for rabbitmq.
+# Default values for gitlab-runner.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
 image:
-  repository: rabbitmq
-  pullPolicy: Always
+  repository: nginx
+  pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "3.9.14"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -80,14 +80,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-rabbitmq:
-  auth:
-    enabled: true
-    username: root
-    password: Root1234!
-  extraConfiguration: |-
-    default_vhost = host
-    default_permissions.configure = .*
-    default_permissions.read = .*
-    default_permissions.write = .*
