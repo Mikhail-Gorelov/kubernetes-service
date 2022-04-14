@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  pullPolicy: IfNotPresent
+  repository: prodrigestivill/postgres-backup-local
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -80,3 +80,11 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+pgBackUp:
+  postgresExtraOpts: "-Z9 --schema=public --blobs"
+  schelude: "@daily"
+  backupKeepDays: 7
+  backupKeepWeeks: 4
+  backupKeepMonths: 6
+  healthCheckPort: 81

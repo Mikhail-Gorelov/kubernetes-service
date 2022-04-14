@@ -1,0 +1,6 @@
+dependencies:
+- name: grafana
+  repository: https://charts.bitnami.com/bitnami
+  version: 7.6.28
+digest: sha256:b43410d87dca4849f6c35c65ac40a019d7d08b5c0a16a8b1738edf9e9631a6a9
+generated: "2022-04-14T21:33:41.330206+03:00"

@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "mailhog.fullname" . }}
   labels:
     {{- include "mailhog.labels" . | nindent 4 }}
 spec:
+  serviceName: {{ include "mailhog.fullname" . }}
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
@@ -37,16 +38,33 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: SMARTHOST_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: email-secrets
+                  key: emailHost
+                  optional: false
+            - name: SMARTHOST_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: email-secrets
+                  key: emailPort
+                  optional: false
+            - name: GMAIL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: email-secrets
+                  key: emailHostUser
+                  optional: false
+            - name: GMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: email-secrets
+                  key: emailHostPassword
+                  optional: false
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

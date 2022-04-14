@@ -1,16 +1,17 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: {{ include "pg_backup.fullname" . }}
+  name: {{ include "pg-backup.fullname" . }}
   labels:
-    {{- include "pg_backup.labels" . | nindent 4 }}
+    {{- include "pg-backup.labels" . | nindent 4 }}
 spec:
+  serviceName: {{ include "pg-backup.fullname" . }}
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "pg_backup.selectorLabels" . | nindent 6 }}
+      {{- include "pg-backup.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +19,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "pg_backup.selectorLabels" . | nindent 8 }}
+        {{- include "pg-backup.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "pg_backup.serviceAccountName" . }}
+      serviceAccountName: {{ include "pg-backup.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -37,16 +38,21 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: POSTGRES_EXTRA_OPTS
+              value: {{ .Values.pgBackUp.postgresExtraOpts | quote }}
+            - name: SCHEDULE
+              value: {{ .Values.pgBackUp.schelude | quote }}
+            - name: BACKUP_KEEP_DAYS
+              value: {{ .Values.pgBackUp.backupKeepDays | quote }}
+            - name: BACKUP_KEEP_WEEKS
+              value: {{ .Values.pgBackUp.backupKeepWeeks | quote }}
+            - name: BACKUP_KEEP_MONTHS
+              value: {{ .Values.pgBackUp.backupKeepMonths | quote }}
+            - name: HEALTHCHECK_PORT
+              value: {{ .Values.pgBackUp.healthCheckPort | quote }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
