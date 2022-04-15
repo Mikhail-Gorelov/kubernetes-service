@@ -43,18 +43,6 @@ spec:
           env:
             - name: AUTOHEAL_CONTAINER_LABEL
               value: "all"
-          volumeMounts:
-            - name: local-vol
-              mountPath: /var/run/docker.sock
-  volumeClaimTemplates:
-  - metadata:
-      name: local-vol
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "local-storage"
-      resources:
-        requests:
-          storage: 8Gi
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
