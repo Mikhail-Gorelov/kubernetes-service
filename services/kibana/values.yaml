@@ -5,10 +5,10 @@
 replicaCount: 1
 
 image:
-  repository: kibana
+  repository: docker.elastic.co/kibana/kibana
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "7.17.2"
+  tag: "8.0.0"
 
 imagePullSecrets: []
 nameOverride: ""
