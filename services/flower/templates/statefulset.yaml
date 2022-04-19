@@ -41,12 +41,10 @@ spec:
           env:
             - name: FLOWER_PORT
               value: {{ .Values.service.port | quote }}
-#   TODO: нужно создать файл с секретом в редисе, в котором я буду указывать данные редиса и потом эти данные буду
-#   передавать данные из секрета сюда, далее можно двигаться дальше
             - name: REDIS_HOST
-              value: {{ default (printf "%s-redis-master" .Release.Name) .Values.redis.host | quote }}
+              value: {{ default (printf "redis-master-%s" .Release.Name) | quote }}
             - name: REDIS_PORT
-              value: {{ .Values.django.redis.redisPort | quote }}
+              value: {{ .Values.redis.redisPort | quote }}
             - name: CELERY_BROKER_URL
               value: "redis://$(REDIS_HOST):$(REDIS_PORT)/3"
           resources:

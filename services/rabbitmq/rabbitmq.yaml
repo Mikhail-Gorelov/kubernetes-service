@@ -1,0 +1,20 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: rabbitmq-service
+spec:
+  replicas: 1
+  override:
+    statefulSet:
+      spec:
+        template:
+          spec:
+            containers:
+              - name: rabbitmq
+                env:
+                  - name: RABBITMQ_DEFAULT_USER
+                    value: "root"
+                  - name: RABBITMQ_DEFAULT_PASS
+                    value: "StayavayfrommyW977"
+                  - name: RABBITMQ_DEFAULT_VHOST
+                    value: "blog"
