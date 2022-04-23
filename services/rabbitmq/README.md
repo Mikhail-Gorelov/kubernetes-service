@@ -3,6 +3,6 @@ kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/d
 Instruction is here:
 https://www.rabbitmq.com/kubernetes/operator/quickstart-operator.html
 Install:
-kubectl apply -f rabbitmq.yaml
-Delete:
-kubectl delete -f rabbitmq.yaml
+kubectl apply -f rabbitmq.yaml Delete:
+kubectl delete -f rabbitmq.yaml With values file:
+helm upgrade --install rabbitmq bitnami/rabbitmq --values values.yaml

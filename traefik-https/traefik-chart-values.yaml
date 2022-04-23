@@ -1,0 +1,33 @@
+additionalArguments:
+  - "--entryPoints.websecure.forwardedHeaders.trustedIPs=10.0.0.0/8"
+  - "--certificatesresolvers.le.acme.email=support@procivis.ch"
+  - "--certificatesresolvers.le.acme.storage=/data/acme.json"
+  - "--certificatesresolvers.le.acme.httpchallenge=true"
+  - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+
+rbac:
+  enabled: true
+
+ssl:
+  enabled: true
+  enforced: true
+
+ports:
+  web:
+    redirectTo: websecure
+
+env:
+  - name: CF_API_EMAIL
+    valueFrom:
+      secretKeyRef:
+        key: email
+        name: cloudflare-api-credentials
+
+ingressRoute:
+  dashboard:
+    enabled: false
+
+persistence:
+  enabled: true
+  path: /certs
+  size: 128Mi

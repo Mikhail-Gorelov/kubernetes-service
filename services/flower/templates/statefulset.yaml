@@ -29,7 +29,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Chart.Name }}blog
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -42,11 +42,29 @@ spec:
             - name: FLOWER_PORT
               value: {{ .Values.service.port | quote }}
             - name: REDIS_HOST
-              value: {{ default (printf "redis-master-%s" .Release.Name) | quote }}
+              value: "redis-master"
             - name: REDIS_PORT
               value: {{ .Values.redis.redisPort | quote }}
             - name: CELERY_BROKER_URL
               value: "redis://$(REDIS_HOST):$(REDIS_PORT)/3"
+        - name: {{ .Chart.Name }}chat
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 5556
+              protocol: TCP
+          env:
+            - name: FLOWER_PORT
+              value: {{ .Values.serviceChat.port | quote }}
+            - name: REDIS_HOST
+              value: "redis-master"
+            - name: REDIS_PORT
+              value: {{ .Values.redis.redisPort | quote }}
+            - name: CELERY_BROKER_URL
+              value: "redis://$(REDIS_HOST):$(REDIS_PORT)/7"
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

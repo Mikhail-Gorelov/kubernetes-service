@@ -40,6 +40,9 @@ service:
   type: ClusterIP
   port: 5555
 
+serviceChat:
+  port: 5556
+
 ingress:
   enabled: true
   className: ""
