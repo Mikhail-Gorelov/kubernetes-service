@@ -1,0 +1,4 @@
+export YC_TOKEN=AQAAAAAsIr5EAATuwWSQ_VoxLkvoj_Kon31h3Rg
+export YC_CLOUD_ID=b1g5hl8sttn545cmacn0
+export YC_FOLDER_ID=b1gv9hnohevov3kdhdq0
+export YC_ZONE=ru-central1-a

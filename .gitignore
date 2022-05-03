@@ -1,3 +1,5 @@
+./terraform/export.sh
+./terraform/.terraform
 node_modules
 Pip*
 Pipfile*
