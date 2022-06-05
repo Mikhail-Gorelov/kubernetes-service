@@ -1,7 +1,4 @@
-variable "folder" {
-  type = string
-  default = "b1gv9hnohevov3kdhdq0"
-}
+variable "FOLDER" {}
 
 variable "static_ip_name" {
   description = "Please enter static ip name"
@@ -26,7 +23,7 @@ variable "default_labels" {
 
 variable "allow_ports" {
   description = "List of Ports to open for server"
-  type        = list
+  type        = list(string)
   default     = ["80", "443", "22", "10000", "9000"]
 }
 

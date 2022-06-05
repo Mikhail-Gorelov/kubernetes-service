@@ -90,17 +90,12 @@ variable "env" {
   default = "prod"
 }
 
-variable "folder" {
-  type = string
-  default = "b1gv9hnohevov3kdhdq0"
-}
+variable "FOLDER" {}
 
-variable "zone" {
-  type = string
-  default = "ru-central1-a"
-}
+variable "ZONE" {}
 
-variable "token" {
-  type = string
-  default = "AQAAAAAsIr5EAATuwWSQ_VoxLkvoj_Kon31h3Rg"
-}
+variable "TOKEN" {}
+
+variable "CLOUD_ID" {}
+
+variable "YC_CLI_FOLDER" {}

@@ -1,7 +1,4 @@
-variable "folder" {
-  type = string
-  default = "b1gv9hnohevov3kdhdq0"
-}
+variable "FOLDER" {}
 
 variable "default_subnet_zone" {
   description = "Please enter default subnet zone"

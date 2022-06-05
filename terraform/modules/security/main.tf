@@ -13,10 +13,11 @@ locals {
 
 module "network" {
   source = "../../modules/network"
+  FOLDER = var.FOLDER
 }
 
 resource "yandex_vpc_address" "my_static_ip" {
-  folder_id = var.folder
+  folder_id = var.FOLDER
   name = var.static_ip_name
 
   external_ipv4_address {
@@ -26,7 +27,7 @@ resource "yandex_vpc_address" "my_static_ip" {
 
 resource "yandex_vpc_security_group" "group1" {
   name        = var.security_group_name
-  folder_id   = var.folder
+  folder_id   = var.FOLDER
   network_id  = module.network.network_id
 
   labels = merge(var.default_labels, {type = local.type})
@@ -37,7 +38,7 @@ resource "yandex_vpc_security_group" "group1" {
       from_port      = ingress.value
       to_port        = ingress.value
       protocol       = "TCP"
-      v4_cidr_blocks = ["0.0.0.0/0"]
+      v4_cidr_blocks = ["10.0.1.0/24"]
     }
   }
 

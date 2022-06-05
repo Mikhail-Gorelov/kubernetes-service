@@ -8,11 +8,11 @@ terraform {
 }
 
 resource "yandex_vpc_network" "default_network" {
-  folder_id = var.folder
+  folder_id = var.FOLDER
 }
 
 resource "yandex_vpc_subnet" "default_subnet" {
-  folder_id = var.folder
+  folder_id = var.FOLDER
   v4_cidr_blocks = ["10.2.0.0/16"]
   zone           = var.default_subnet_zone
   network_id     = yandex_vpc_network.default_network.id

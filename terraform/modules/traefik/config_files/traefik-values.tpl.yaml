@@ -1,0 +1,36 @@
+rbac:
+  enabled: true
+
+ssl:
+  enabled: true
+  enforced: true
+
+ports:
+  web:
+    redirectTo: "websecure"
+
+#service:
+#  spec:
+#    loadBalancerIP: ${public_ip}
+#    externalIPs:
+#      - ${public_ip}
+
+persistence:
+  enabled: true
+
+deployment:
+  initContainers:
+    # fix permissions of certificate persistence volume
+    - name: volume-permissions
+      image: busybox:1.31.1
+      command: ["sh", "-c", "chmod -Rv 600 /data/*"]
+      volumeMounts:
+        - name: data
+          mountPath: /data
+
+additionalArguments:
+  - "--entryPoints.websecure.forwardedHeaders.trustedIPs=10.0.0.0/8"
+  - "--certificatesresolvers.le.acme.email=gorelovmihail0@gmail.com"
+  - "--certificatesresolvers.le.acme.storage=/data/acme.json"
+  - "--certificatesresolvers.le.acme.httpchallenge=true"
+  - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
