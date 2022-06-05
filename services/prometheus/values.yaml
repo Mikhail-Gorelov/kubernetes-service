@@ -1,0 +1,6 @@
+redis:
+  uri: "redis://redis-master:6379"
+
+serviceMonitor:
+  additionalLabels:
+    release: prometheus
